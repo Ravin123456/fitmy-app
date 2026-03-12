@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="FitMY — Your AI-powered Malaysian fitness and diet planner. Generate meal plans with local food within your RM budget, personalised workouts, and track your progress.">
+    <meta name="keywords" content="fitness, diet, Malaysia, meal plan, workout, budget, halal, nasi lemak, roti canai">
+    <meta name="author" content="FitMY">
+    <title>FitMY — Malaysian AI Fitness & Diet Planner</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav id="main-nav" class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <span class="brand-icon">💪</span>
+                <span class="brand-text">Fit<span class="brand-highlight">MY</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#food" class="nav-link">Foods</a>
+                <a href="#pricing" class="nav-link">Pricing</a>
+                <a href="login.html" class="nav-link btn-outline btn-sm" id="login-btn">Log In</a>
+                <a href="register.html" class="nav-link btn-primary btn-sm" id="signup-btn">Start Free</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🇲🇾 Made for Malaysians</div>
+            <h1 class="hero-title">
+                Your AI-Powered<br>
+                <span class="gradient-text">Malaysian Fitness Planner</span>
+            </h1>
+            <p class="hero-subtitle">
+                Eat nasi lemak and still hit your macros. Generate meal plans with local food
+                within your RM budget. Get custom workouts. Track everything.
+            </p>
+            <div class="hero-cta">
+                <a href="register.html" class="btn btn-primary btn-lg" id="hero-cta">Start Your Plan →</a>
+                <p class="hero-note">No credit card required · Free plan available</p>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value">30+</span>
+                    <span class="stat-label">Local Foods</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">RM</span>
+                    <span class="stat-label">Budget Control</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">7-Day</span>
+                    <span class="stat-label">Rotating Plans</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">3 simple steps to your personalised fitness plan</p>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Set Your Profile</h3>
+                    <p>Tell us your age, weight, goal, budget, and food preferences.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Get Your Plan</h3>
+                    <p>Our AI generates a 7-day meal plan + workout routine customised for you.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Track & Improve</h3>
+                    <p>Log your progress, track calories, and watch your transformation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Everything You Need to Get Fit</h2>
+            <p class="section-subtitle">Built specifically for Malaysians, by Malaysians</p>
+            <div class="features-grid">
+                <div class="feature-card" id="feature-diet">
+                    <div class="feature-icon">🍛</div>
+                    <h3>Malaysian Diet Plans</h3>
+                    <p>Nasi Lemak, Roti Canai, Rendang — eat what you love while hitting your macros and calorie
+                        targets.</p>
+                </div>
+                <div class="feature-card" id="feature-budget">
+                    <div class="feature-icon">💰</div>
+                    <h3>Budget Friendly</h3>
+                    <p>Set your daily RM budget and get meal plans that fit your wallet. Perfect for students and
+                        working adults.</p>
+                </div>
+                <div class="feature-card" id="feature-workout">
+                    <div class="feature-icon">🏋️</div>
+                    <h3>Smart Workouts</h3>
+                    <p>Gym or home — get Push/Pull/Legs splits or bodyweight programs with progressive overload built
+                        in.</p>
+                </div>
+                <div class="feature-card" id="feature-tracking">
+                    <div class="feature-icon">📊</div>
+                    <h3>Progress Tracking</h3>
+                    <p>Log weight, track calories, monitor BMI, and see your transformation over time with visual
+                        charts.</p>
+                </div>
+                <div class="feature-card" id="feature-grocery">
+                    <div class="feature-icon">🛒</div>
+                    <h3>Grocery Lists</h3>
+                    <p>Auto-generated grocery lists with estimated costs. Know exactly what to buy for the week.</p>
+                </div>
+                <div class="feature-card" id="feature-streak">
+                    <div class="feature-icon">🔥</div>
+                    <h3>Streaks & Habits</h3>
+                    <p>Stay motivated with daily streaks, water intake tracking, and achievement milestones.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Malaysian Food Showcase -->
+    <section id="food" class="food-showcase">
+        <div class="container">
+            <h2 class="section-title">Powered by Malaysian Favourites</h2>
+            <p class="section-subtitle">Our database includes 30+ local foods with accurate nutritional data and RM
+                prices</p>
+            <div class="food-grid">
+                <div class="food-chip"><span class="food-emoji">🍚</span> Nasi Lemak</div>
+                <div class="food-chip"><span class="food-emoji">🫓</span> Roti Canai</div>
+                <div class="food-chip"><span class="food-emoji">🍗</span> Nasi Ayam</div>
+                <div class="food-chip"><span class="food-emoji">🍜</span> Mee Goreng</div>
+                <div class="food-chip"><span class="food-emoji">🍳</span> Char Kuey Teow</div>
+                <div class="food-chip"><span class="food-emoji">🥘</span> Rendang Ayam</div>
+                <div class="food-chip"><span class="food-emoji">🫕</span> Sup Ayam</div>
+                <div class="food-chip"><span class="food-emoji">🐟</span> Ikan Bakar</div>
+                <div class="food-chip"><span class="food-emoji">☕</span> Teh Tarik</div>
+                <div class="food-chip"><span class="food-emoji">🥞</span> Thosai</div>
+                <div class="food-chip"><span class="food-emoji">🫓</span> Chapati</div>
+                <div class="food-chip"><span class="food-emoji">🍜</span> Maggi Goreng</div>
+                <div class="food-chip"><span class="food-emoji">🥣</span> Oats</div>
+                <div class="food-chip"><span class="food-emoji">🥚</span> Eggs</div>
+                <div class="food-chip"><span class="food-emoji">🥬</span> Sayur Campur</div>
+                <div class="food-chip"><span class="food-emoji">🫘</span> Tempeh</div>
+                <div class="food-chip"><span class="food-emoji">🧊</span> Tofu</div>
+                <div class="food-chip"><span class="food-emoji">🐔</span> Ayam Goreng</div>
+                <div class="food-chip"><span class="food-emoji">🍌</span> Pisang Goreng</div>
+                <div class="food-chip"><span class="food-emoji">🍚</span> Nasi Campur</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2 class="section-title">Simple, Affordable Pricing</h2>
+            <p class="section-subtitle">Start free. Upgrade when you're ready.</p>
+            <div class="pricing-grid">
+                <!-- FREE -->
+                <div class="pricing-card" id="plan-free">
+                    <h3 class="plan-name">Free</h3>
+                    <div class="plan-price"><span class="currency">RM</span> 0</div>
+                    <p class="plan-period">forever</p>
+                    <ul class="plan-features">
+                        <li><span class="check">✓</span> Basic calorie calculator</li>
+                        <li><span class="check">✓</span> 3-day meal plan</li>
+                        <li><span class="check">✓</span> Basic workout plan</li>
+                        <li><span class="cross">✗</span> Full 30-day plan</li>
+                        <li><span class="cross">✗</span> Progress tracking</li>
+                        <li><span class="cross">✗</span> Grocery list generator</li>
+                        <li><span class="cross">✗</span> Advanced macro optimization</li>
+                        <li><span class="cross">✗</span> AI Coach & meal swap</li>
+                    </ul>
+                    <button onclick="handlePricingClick('free')" class="btn btn-outline" style="width:100%;">Get Started</button>
+                </div>
+                <!-- PREMIUM -->
+                <div class="pricing-card" id="plan-premium">
+                    <h3 class="plan-name">Premium</h3>
+                    <div class="plan-price"><span class="currency">RM</span> 19.90</div>
+                    <p class="plan-period">per month</p>
+                    <ul class="plan-features">
+                        <li><span class="check">✓</span> Everything in Free</li>
+                        <li><span class="check">✓</span> Full 30-day rotating plan</li>
+                        <li><span class="check">✓</span> Macro-balanced diet plan</li>
+                        <li><span class="check">✓</span> Weekly progress tracking</li>
+                        <li><span class="check">✓</span> Grocery list generator</li>
+                        <li><span class="cross">✗</span> Advanced progress analytics</li>
+                        <li><span class="cross">✗</span> AI Coach & meal swap</li>
+                        <li><span class="cross">✗</span> PDF export & habit tracker</li>
+                    </ul>
+                    <button onclick="handlePricingClick('premium')" class="btn btn-outline" style="width:100%;">Upgrade Now</button>
+                </div>
+                <!-- PRO -->
+                <div class="pricing-card featured" id="plan-pro">
+                    <div class="plan-badge">Best Value</div>
+                    <h3 class="plan-name">Pro</h3>
+                    <div class="plan-price"><span class="currency">RM</span> 90</div>
+                    <p class="plan-period">for 6 months</p>
+                    <ul class="plan-features">
+                        <li><span class="check">✓</span> Everything in Premium</li>
+                        <li><span class="check">✓</span> Smart grocery list with cost</li>
+                        <li><span class="check">✓</span> Advanced progress analytics</li>
+                        <li><span class="check">✓</span> AI Coach & meal swap</li>
+                        <li><span class="check">✓</span> Adaptive workout adjustments</li>
+                        <li><span class="check">✓</span> PDF export & habit tracker</li>
+                    </ul>
+                    <button onclick="handlePricingClick('pro')" class="btn btn-primary" style="width:100%;">Go Pro</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div>
+                        <span class="brand-icon">💪</span>
+                        <span class="brand-text">Fit<span class="brand-highlight">MY</span></span>
+                    </div>
+                    <p>AI-Powered Malaysian Fitness & Diet Planner</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#features">Features</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 FitMY. All rights reserved. 🇲🇾</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js?v=2"></script>
+    <script>
+        function handlePricingClick(planType) {
+            if (planType !== 'free') {
+                localStorage.setItem('intended_plan', planType);
+            } else {
+                localStorage.removeItem('intended_plan');
+            }
+            
+            if (auth && auth.isLoggedIn()) {
+                if (planType === 'free') {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    window.location.href = 'dashboard.html?checkout=true';
+                }
+            } else {
+                window.location.href = 'register.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

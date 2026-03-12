@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FitMY</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            background-color: #0A0A0F;
+            color: #F8FAFC;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 140px 20px 40px; /* Increased to prevent header overlap */
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #1A1A24;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00F0FF, #00FF88);
+            opacity: 0.5;
+        }
+
+        .stat-label {
+            color: #94A3B8;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+
+        .main-content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .card-panel {
+            background: #1A1A24;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94A3B8;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .macro-bar {
+            height: 8px;
+            background: #2A2A35;
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .macro-fill {
+            height: 100%;
+        }
+
+        .mt-4 { margin-top: 24px; }
+        .mb-2 { margin-bottom: 8px; }
+
+        @media (max-width: 900px) {
+            .dashboard-grid, .main-content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="main-nav" style="background: rgba(10, 10, 15, 0.95);">
+        <div class="container nav-content">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-icon">💪</span>
+                <span class="brand-text">Fit<span class="brand-highlight">MY</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="#mealplan" class="nav-link">Meals</a>
+                <a href="#workouts" class="nav-link">Workouts</a>
+            </div>
+            <div class="nav-buttons">
+                <!-- Will be populated by JS -->
+                <a id="logout-btn" href="#" class="btn btn-outline" onclick="auth.logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div>
+                <h1 class="dashboard-title">Welcome back, <span id="user-name" style="color: #00F0FF;">Trainer</span></h1>
+                <p style="color: #94A3B8; margin-top: 5px;">Here is your fitness overview for today.</p>
+                <a href="onboarding.html?reset=true" id="refresh-profile-btn" class="btn btn-outline" style="display: none; margin-top: 15px; font-size: 0.85rem; padding: 8px 16px;">🔄 Refresh Profile Inputs</a>
+            </div>
+            <a href="#" class="btn btn-primary" id="subscribe-btn" style="display: none;">Activate Subscription</a>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <span class="stat-label">Current Weight</span>
+                <h3 class="stat-value" id="stat-weight">-- kg</h3>
+                <button class="btn btn-outline mt-4" style="padding: 8px; font-size: 0.8rem;" onclick="logWeight()">Log Weight</button>
+            </div>
+            <div class="stat-card" style="border-top-color: #FBBC05;">
+                <span class="stat-label">Current Streak</span>
+                <h3 class="stat-value" id="stat-streak">-- Days</h3>
+                <p style="color: #94A3B8; font-size: 0.8rem; margin: 5px 0 0;">Longest: <span id="stat-longest-streak">--</span></p>
+            </div>
+            <div class="stat-card" style="border-top-color: #EA4335;">
+                <span class="stat-label">Daily Calories</span>
+                <h3 class="stat-value" id="stat-calories">-- kcal</h3>
+                <p style="color: #94A3B8; font-size: 0.8rem; margin: 5px 0 0;">Target goal based on profile</p>
+            </div>
+        </div>
+
+        <div class="main-content-grid">
+            <div class="card-panel">
+                <h2 class="panel-title">🍽️ Today's Meal Plan</h2>
+                <div id="meal-plan-content" class="empty-state">
+                    <h3>No Active Meal Plan</h3>
+                    <p>You need to complete your profile and subscribe to generate a customized Malaysian meal plan.</p>
+                    <a href="onboarding.html" class="btn btn-primary mt-4">Setup Profile</a>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <h2 class="panel-title">📊 Macro Targets</h2>
+                <div id="macros-content">
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-weight: 500;">Protein</span>
+                            <span id="macro-protein" style="color: #94A3B8;">--g</span>
+                        </div>
+                        <div class="macro-bar">
+                            <div class="macro-fill" style="width: 30%; background: #00F0FF;"></div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-weight: 500;">Carbs</span>
+                            <span id="macro-carbs" style="color: #94A3B8;">--g</span>
+                        </div>
+                        <div class="macro-bar">
+                            <div class="macro-fill" style="width: 45%; background: #FBBC05;"></div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-weight: 500;">Fats</span>
+                            <span id="macro-fats" style="color: #94A3B8;">--g</span>
+                        </div>
+                        <div class="macro-bar">
+                            <div class="macro-fill" style="width: 25%; background: #EA4335;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="panel-title mt-4" style="margin-top: 40px;">🏋️ Next Workout</h2>
+                <div id="workout-content" class="empty-state" style="padding: 20px;">
+                    <p style="margin:0;">No workout scheduled.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Coach Widget -->
+    <button id="chat-fab" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; background: #00F0FF; color: #050505; border: none; box-shadow: 0 4px 15px rgba(0,240,255,0.4); font-size: 1.5rem; cursor: pointer; z-index: 1000; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;">
+        💬
+    </button>
+
+    <div id="chat-window" style="position: fixed; bottom: 100px; right: 30px; width: 350px; height: 500px; background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 1000;">
+        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 1.1rem; color: #00F0FF;">FitMY Coach AI</h3>
+            <button id="chat-close" style="background: none; border: none; color: #94A3B8; cursor: pointer; font-size: 1.2rem;">✖</button>
+        </div>
+        
+        <div id="chat-messages" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+            <div style="background: rgba(0,240,255,0.1); padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 2px; max-width: 85%; color: #F8FAFC; font-size: 0.9rem; align-self: flex-start;">
+                Hi there! I'm your premium AI Coach. How can I help you crush your goals today? 🚀
+            </div>
+        </div>
+
+        <form id="chat-form" style="padding: 15px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px;">
+            <input type="text" id="chat-input" placeholder="Ask about your diet or workout..." style="flex: 1; min-width: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #F8FAFC; padding: 10px; border-radius: 8px; font-size: 0.9rem;">
+            <button type="submit" style="background: #00F0FF; color: #050505; border: none; padding: 0 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">Send</button>
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js?v=9"></script>
+    <script>
+        // Dashboard specific logic
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!auth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Check if returning from a Stripe Checkout
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('session_id');
+            const wantCheckout = urlParams.get('checkout') === 'true';
+            
+            if (sessionId) {
+                document.body.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100vh; font-size: 1.5rem; color:#00F0FF;">Verifying your Premium Upgrade... 🚀</div>';
+                try {
+                    await api.request('/api/payments/verify?session_id=' + sessionId);
+                } catch (err) {
+                    console.error("Verification error:", err);
+                }
+                // Strip the session ID from URL and reload the dashboard clean
+                window.location.href = window.location.pathname;
+                return;
+            }
+
+            if (wantCheckout) {
+                const intendedPlan = localStorage.getItem('intended_plan');
+                if (intendedPlan && intendedPlan !== 'free') {
+                    document.body.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100vh; font-size: 1.5rem; color:#00F0FF;">Redirecting to Secure Checkout... 🔒</div>';
+                    try {
+                        const checkout = await api.request('/api/payments/checkout', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                plan_type: intendedPlan,
+                                success_url: window.location.origin + '/dashboard.html?session_id={CHECKOUT_SESSION_ID}',
+                                cancel_url: window.location.origin + '/dashboard.html'
+                            })
+                        });
+                        if (checkout && checkout.checkout_url) {
+                            localStorage.removeItem('intended_plan');
+                            window.location.href = checkout.checkout_url;
+                            return;
+                        }
+                    } catch (err) {
+                        alert('Could not start checkout: ' + err.message);
+                        window.location.href = 'dashboard.html';
+                        return;
+                    }
+                }
+            }
+
+            let dashboardData = null;
+            try {
+                // Fetch Dashboard Data
+                const res = await api.request('/api/dashboard');
+                dashboardData = res;
+                if (res) {
+                    if (res.user_name) document.getElementById('user-name').textContent = res.user_name;
+                    if (res.current_weight) document.getElementById('stat-weight').textContent = res.current_weight + ' kg';
+                    if (res.current_streak !== undefined) document.getElementById('stat-streak').textContent = res.current_streak + ' Days';
+                    if (res.longest_streak !== undefined) document.getElementById('stat-longest-streak').textContent = res.longest_streak;
+                    if (res.target_calories) document.getElementById('stat-calories').textContent = res.target_calories + ' kcal';
+                    
+                    if (res.target_protein) document.getElementById('macro-protein').textContent = res.target_protein + 'g';
+                    if (res.target_carbs) document.getElementById('macro-carbs').textContent = res.target_carbs + 'g';
+                    if (res.target_fats) document.getElementById('macro-fats').textContent = res.target_fats + 'g';
+                }
+
+                // Check subscription status
+                const subRes = await api.request('/api/payments/status');
+                const isPremium = subRes && subRes.is_active && (subRes.plan_type === 'premium' || subRes.plan_type === 'pro');
+                const isPro = subRes && subRes.is_active && subRes.plan_type === 'pro';
+
+                if (isPremium) {
+                    const titleText = document.querySelector('.dashboard-title');
+                    const uName = dashboardData?.user_name || 'Premium Trainer';
+                    titleText.innerHTML = `Welcome back, <span id="user-name" style="color: #00FF88;">${uName}</span> 🌟`;
+                    document.getElementById('subscribe-btn').style.display = 'none';
+                    document.getElementById('refresh-profile-btn').style.display = 'inline-block';
+                } else {
+                    const subBtn = document.getElementById('subscribe-btn');
+                    subBtn.style.display = 'inline-flex';
+                    subBtn.textContent = 'Upgrade to Premium/Pro';
+                    subBtn.onclick = () => {
+                        window.location.href = 'index.html#pricing';
+                    };
+                }
+
+                // Render Meals with Day Tabs
+                try {
+                    const mealsRes = await api.request('/api/meals/plan');
+                    if (mealsRes && Object.keys(mealsRes).length > 0) {
+                        const container = document.getElementById('meal-plan-content');
+                        container.className = ''; 
+                        
+                        const days = Object.keys(mealsRes);
+                        let currentDay = days[0];
+
+                        const renderMeals = (dayName) => {
+                            const dayData = mealsRes[dayName];
+                            let html = `<div style="display:flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; padding-bottom: 10px;">`;
+                            days.forEach(d => {
+                                const activeStyle = d === dayName ? 'background: #00F0FF; color: #000; border-color: #00F0FF;' : 'color: #94A3B8;';
+                                html += `<button class="btn btn-outline" style="min-width: 90px; padding: 6px; font-size: 0.85em; ${activeStyle}" onclick="window.switchMealDay('${d}')">${d}</button>`;
+                            });
+                            html += `</div>`;
+
+                            if (dayData && dayData.meals) {
+                                html += `<div style="display: flex; flex-direction: column; gap: 15px;">`;
+                                dayData.meals.forEach(meal => {
+                                    html += `
+                                    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <h4 style="margin: 0 0 5px; font-size: 1.1rem; color: #F8FAFC;">${meal.name}</h4>
+                                            <p style="margin: 0; color: #94A3B8; font-size: 0.85rem;">${meal.category}</p>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <strong style="color: #00F0FF; font-size: 1.1rem;">${meal.calories} kcal</strong>
+                                        </div>
+                                    </div>
+                                    `;
+                                });
+                                
+                            }
+                            container.innerHTML = html;
+                        };
+
+                        window.switchMealDay = (dayName) => renderMeals(dayName);
+                        renderMeals(currentDay);
+                    }
+                } catch (mealErr) {
+                    console.log("Meal plan unavailable.");
+                }
+
+                // Render Workouts with Day Tabs
+                try {
+                    const workoutRes = await api.request('/api/workouts/plan');
+                    window.currentWorkoutData = workoutRes; // Store for GIF modal
+
+                    if (workoutRes && Object.keys(workoutRes).length > 0 && isPremium) {
+                        const wContainer = document.getElementById('workout-content');
+                        wContainer.className = ''; 
+                        
+                        // Extract days from backend response (Day 1, Day 2, etc.)
+                        const wDays = Object.keys(workoutRes).filter(k => k.startsWith('Day'));
+                        if (wDays.length > 0) {
+                            let currentWkDay = wDays[0];
+
+                            const renderWorkouts = (dayName) => {
+                                const wData = workoutRes[dayName];
+                                let wHtml = `<div style="display:flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; padding-bottom: 10px;">`;
+                                wDays.forEach(d => {
+                                    const activeStyle = d === dayName ? 'background: #FBBC05; color: #000; border-color: #FBBC05;' : 'color: #94A3B8;';
+                                    wHtml += `<button class="btn btn-outline" style="min-width: 90px; padding: 6px; font-size: 0.85em; ${activeStyle}" onclick="window.switchWorkoutDay('${d}')">${d}</button>`;
+                                });
+                                wHtml += `</div>`;
+
+                                if (wData && wData.exercises && wData.exercises.length > 0) {
+                                    wHtml += `<h3 style="color: #FBBC05; margin-top: 0; margin-bottom: 15px; font-size: 1.2rem;">${wData.focus}</h3>`;
+                                    wHtml += `<div style="display: flex; flex-direction: column; gap: 12px;">`;
+                                    wData.exercises.forEach(ex => {
+                                        wHtml += `
+                                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <h4 style="margin: 0 0 5px; font-size: 1.05rem; color: #F8FAFC;">${ex.name}</h4>
+                                                <p style="margin: 0; color: #94A3B8; font-size: 0.85rem;">${ex.sets} Sets | ${ex.reps} Reps</p>
+                                            </div>
+                                        </div>
+                                        `;
+                                    });
+                                    wHtml += `</div>`;
+                                    wHtml += `<button class="btn btn-primary mt-4" style="width: 100%; padding: 12px;" onclick="window.showWorkoutGIFs('${dayName}')">Start ${dayName} Workout</button>`;
+                                } else {
+                                    wHtml += `<h3 style="color: #94A3B8; text-align: center; margin-top: 30px;">Rest Day 🛌</h3>`;
+                                }
+                                wContainer.innerHTML = wHtml;
+                            };
+
+                            window.switchWorkoutDay = (dayName) => renderWorkouts(dayName);
+                            
+                            window.showWorkoutGIFs = (dayName) => {
+                                const wData = window.currentWorkoutData[dayName];
+                                if (!wData || !wData.exercises || wData.exercises.length === 0) return;
+
+                                let gifHtml = '';
+                                wData.exercises.forEach(ex => {
+                                    // Map exercise names to Exact Technical Anatomy GIFs from FitnessProgramer
+                                    let gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/05/bodyweight-squat-full-version.gif'; 
+                                    const fallbackGif = 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png'; // Professional dumbbell placeholder icon
+                                    const name = ex.name.toLowerCase();
+                                    
+                                    if (name.includes('leg press')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2015/11/Leg-Press.gif';
+                                    else if (name.includes('lunge')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lunge.gif';
+                                    else if (name.includes('squat')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/05/bodyweight-squat-full-version.gif';
+                                    else if (name.includes('extension')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/LEG-EXTENSION.gif';
+                                    else if (name.includes('calf raise')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Calf-Raise.gif';
+                                    else if (name.includes('shoulder press')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif';
+                                    else if (name.includes('lateral raise')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif';
+                                    else if (name.includes('delt fly') || name.includes('face pull')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Reverse-Fly.gif';
+                                    else if (name.includes('upright row')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2015/11/Dumbbell-Upright-Row.gif';
+                                    else if (name.includes('pulldown')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Lat-Pulldown.gif';
+                                    else if (name.includes('cable row')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Cable-Row.gif';
+                                    else if (name.includes('dumbbell row')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Row.gif';
+                                    else if (name.includes('bench press') || name.includes('incline')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Press.gif';
+                                    else if (name.includes('pec deck')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Pec-Deck-Fly.gif';
+                                    else if (name.includes('push up') || name.includes('push ups')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Push-Up.gif';
+                                    else if (name.includes('treadmill') || name.includes('cycling')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/09/Walking.gif';
+                                    else if (name.includes('crunch')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2015/11/Crunch.gif';
+                                    else if (name.includes('plank')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/plank.gif';
+                                    else if (name.includes('leg raise')) gifUrl = 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Lying-Leg-Raise.gif';
+
+                                    gifHtml += `
+                                        <div style="margin-bottom: 25px; text-align: center; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px;">
+                                            <h4 style="color: #00F0FF; margin: 0 0 5px; font-size: 1.1rem;">${ex.name}</h4>
+                                            <p style="color: #94A3B8; font-size: 0.9rem; margin-top: 0; margin-bottom: 15px;">${ex.sets} Sets | ${ex.reps} Reps</p>
+                                            <img src="${gifUrl}" onerror="this.onerror=null; this.src='${fallbackGif}';" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);" alt="${ex.name} Tutorial">
+                                        </div>
+                                    `;
+                                });
+
+                                const modal = document.createElement('div');
+                                modal.style.position = 'fixed';
+                                modal.style.top = '0'; modal.style.left = '0'; modal.style.width = '100%'; modal.style.height = '100%';
+                                modal.style.backgroundColor = 'rgba(0,0,0,0.85)';
+                                modal.style.zIndex = '2000';
+                                modal.style.display = 'flex';
+                                modal.style.justifyContent = 'center';
+                                modal.style.alignItems = 'center';
+                                modal.style.backdropFilter = 'blur(5px)';
+                                
+                                modal.innerHTML = `
+                                    <div style="background: #1A1A24; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; width: 95%; max-width: 500px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                                        <div style="padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; background: rgba(0,240,255,0.05);">
+                                            <h3 style="margin: 0; font-size: 1.3rem;">${dayName} Workout</h3>
+                                            <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background:none; border:none; color:#94A3B8; cursor:pointer; font-size: 1.5rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94A3B8'">✖</button>
+                                        </div>
+                                        <div style="padding: 20px; overflow-y: auto;">
+                                            ${gifHtml}
+                                        </div>
+                                    </div>
+                                `;
+                                document.body.appendChild(modal);
+                            };
+
+                            renderWorkouts(currentWkDay);
+                        }
+                    } else if (!isPremium) {
+                         document.getElementById('workout-content').innerHTML = `
+                             <div style="text-align: center; padding: 30px 10px;">
+                                 <h3 style="color: #94A3B8; margin-bottom: 10px;">Locked Feature</h3>
+                                 <p style="color: #94A3B8; font-size: 0.9rem; margin-bottom: 20px;">Upgrade to Premium to unlock full 7-day custom workout routines.</p>
+                             </div>
+                         `;
+                    }
+
+                     if (!isPro) {
+                         document.getElementById('chat-fab').style.display = 'none';
+                     }
+                } catch (wErr) {
+                    console.log("Workout plan unavailable.");
+                }
+
+                // --- AI Chat Logic ---
+                const chatFab = document.getElementById('chat-fab');
+                const chatWindow = document.getElementById('chat-window');
+                const chatClose = document.getElementById('chat-close');
+                const chatForm = document.getElementById('chat-form');
+                const chatInput = document.getElementById('chat-input');
+                const messagesDiv = document.getElementById('chat-messages');
+
+                chatFab.addEventListener('click', () => {
+                    chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
+                });
+
+                chatClose.addEventListener('click', () => {
+                    chatWindow.style.display = 'none';
+                });
+
+                function appendMessage(text, isUser) {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.style.padding = '10px 15px';
+                    msgDiv.style.borderRadius = '12px';
+                    msgDiv.style.maxWidth = '85%';
+                    msgDiv.style.fontSize = '0.9rem';
+                    msgDiv.style.color = '#F8FAFC';
+                    
+                    if (isUser) {
+                        msgDiv.style.background = 'rgba(255,255,255,0.1)';
+                        msgDiv.style.borderBottomRightRadius = '2px';
+                        msgDiv.style.alignSelf = 'flex-end';
+                    } else {
+                        msgDiv.style.background = 'rgba(0,240,255,0.1)';
+                        msgDiv.style.borderBottomLeftRadius = '2px';
+                        msgDiv.style.alignSelf = 'flex-start';
+                    }
+                    
+                    msgDiv.textContent = text;
+                    messagesDiv.appendChild(msgDiv);
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                }
+
+                chatForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const text = chatInput.value.trim();
+                    if (!text) return;
+
+                    appendMessage(text, true);
+                    chatInput.value = '';
+                    chatInput.disabled = true;
+
+                    // Loading bubble
+                    const loadingBubble = document.createElement('div');
+                    loadingBubble.style.padding = '10px 15px';
+                    loadingBubble.style.background = 'rgba(0,240,255,0.05)';
+                    loadingBubble.style.color = '#94A3B8';
+                    loadingBubble.style.fontSize = '0.8rem';
+                    loadingBubble.style.alignSelf = 'flex-start';
+                    loadingBubble.style.borderRadius = '12px';
+                    loadingBubble.style.fontStyle = 'italic';
+                    loadingBubble.textContent = "Coach is typing...";
+                    messagesDiv.appendChild(loadingBubble);
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+                    try {
+                        const res = await api.request('/api/chat', {
+                            method: 'POST',
+                            body: JSON.stringify({ message: text })
+                        });
+                        messagesDiv.removeChild(loadingBubble);
+                        
+                        if (res && res.reply) {
+                            appendMessage(res.reply, false);
+                        } else {
+                            appendMessage("Sorry, I encountered an error connecting to my brain.", false);
+                        }
+                    } catch (err) {
+                        messagesDiv.removeChild(loadingBubble);
+                        appendMessage("Error: " + err.message, false);
+                    } finally {
+                        chatInput.disabled = false;
+                        chatInput.focus();
+                    }
+                });
+
+            } catch (err) {
+                console.error("Dashboard load error:", err);
+            }
+        });
+
+        async function logWeight() {
+            const weight = prompt("Enter your current weight (in kg):");
+            if (weight && !isNaN(weight)) {
+                try {
+                    await api.request('/api/dashboard/weight', {
+                        method: 'POST',
+                        body: JSON.stringify({ weight_kg: parseFloat(weight) })
+                    });
+                    window.location.reload();
+                } catch (err) {
+                    alert('Failed to log weight: ' + err.message);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
